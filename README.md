@@ -21,6 +21,7 @@
 - [📖 Sobre el proyecto](#-sobre-el-proyecto)
 - [🚀 Tecnologías](#-tecnologías)
 - [🏗 Arquitectura y patrones](#-arquitectura-y-patrones)
+- [☁️ Diagrama de red AWS](#diagrama-de-red-aws)
 - [🧱 Estructura del proyecto](#-estructura-del-proyecto)
 - [🏇 Cómo correr el proyecto](#-cómo-correr-el-proyecto)
 
@@ -66,6 +67,54 @@ El servicio sigue una arquitectura limpia basada en principios modernos:
     - Webservice
     - Email
     - SMS
+
+## Diagrama de red AWS
+
+---
+```mermaid
+flowchart LR
+  %% AWS Network / Runtime View
+  Producer[Producer<br/>Lambda u otro servicio] -->|SendMessage| SQS[(Amazon SQS<br/>Queue)]
+  Producer -->|SendMessage| DLQ[(Amazon SQS<br/>DLQ)]
+
+  subgraph VPC[AWS VPC]
+    direction LR
+
+    subgraph PUB[Public Subnets]
+      direction TB
+      IGW[Internet Gateway]
+      NAT[NAT Gateway]
+      ALB[Application Load Balancer<br/>opcional si expones REST]
+    end
+
+    subgraph PRIV_APP[Private Subnets - App]
+      direction TB
+      ECS[ECS Fargate o EKS<br/>Quarkus Microservice<br/>Emission Notification]
+      CW[CloudWatch<br/>Logs and Metrics]
+    end
+
+    subgraph PRIV_DB[Private Subnets - DB]
+      direction TB
+      RDS[(Amazon RDS Oracle<br/>o Oracle en EC2 segun tu caso)]
+    end
+
+    VPCE[VPC Endpoint Interface<br/>for SQS]
+
+    ALB -->|HTTP HTTPS| ECS
+    ECS -->|JDBC 1521| RDS
+    ECS -->|ReceiveMessage DeleteMessage| VPCE
+    VPCE --> SQS
+    ECS -->|If no VPCE via NAT| NAT
+    NAT --> IGW
+    ECS -->|Logs and metrics| CW
+  end
+
+  SQS -->|Deliver message| ECS
+  ECS -->|On failure retries| SQS
+  SQS -->|MaxReceiveCount| DLQ
+
+  Client[Ops Client<br/>opcional] -->|HTTPS| ALB
+```
 
 
 ## 🧱 Estructura del Proyecto
