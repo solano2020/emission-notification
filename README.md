@@ -2,7 +2,7 @@
 <br />
 <div align="center">
   <a href="">
-    <img src="docs/images/policy_notifications.png" alt="Logo" width="80" height="80">
+    <img src="docs/images/notification.png" alt="Logo" width="90" height="90">
   </a>
 
 [//]: # (  [![Commits][commits-shield]][commits-url])
