@@ -1,22 +1,77 @@
-# emission-notification
+<!-- PROJECT LOGO -->
+<br />
+<div align="center">
+  <a href="">
+    <img src="docs/images/policy_notifications.png" alt="Logo" width="80" height="80">
+  </a>
 
-Servicio de notificacion de emisiones de polizas. Expone un caso de uso para enviar notificaciones por diferentes canales y persiste el registro de la notificacion.
+[//]: # (  [![Commits][commits-shield]][commits-url])
 
-## Tecnologias
-- Java 21
-- Quarkus 3
-- Maven
-- Hibernate ORM
-- Jakarta Validation
-- Oracle JDBC
+<h2 align="center">Emission notification</h2>
+  <p align="center">
+    Servicio de notificación de emisiones de pólizas. Expone un caso de uso para enviar notificaciones por diferentes canales y persiste el registro de la notificación.
+  </p>
+</div>
 
-## Arquitectura y patrones
-- Arquitectura hexagonal: separacion clara entre dominio, aplicacion e infraestructura.
-- Tell, Don't Ask en el dominio: los objetos de dominio validan su propio estado.
-- Abstract Factory en infraestructura: selecciona el canal de envio (webservice, email, sms) de forma desacoplada.
 
-## Estructura del proyecto
-```
+## 📌 Tabla de Contenidos
+
+---
+
+- [📖 Sobre el proyecto](#-sobre-el-proyecto)
+- [🚀 Tecnologías](#-tecnologías)
+- [🏗 Arquitectura y patrones](#-arquitectura-y-patrones)
+- [🧱 Estructura del proyecto](#-estructura-del-proyecto)
+- [🏇 Cómo correr el proyecto](#-cómo-correr-el-proyecto)
+
+## 📖 Sobre el Proyecto
+
+---
+**Emission-notification** es un microservicio encargado de enviar notificaciones relacionadas con emisiones de pólizas.
+
+Permite:
+
+- Enviar notificaciones por distintos canales (webservice, email, sms)
+- Persistir el historial de notificaciones emitidas
+- Aplicar reglas de dominio con validaciones internas
+
+## 🚀 Tecnologías
+
+---
+Este proyecto está construido con:
+
+* [![Java][Java-shield]][Java-url]
+* [![Quarkus][Quarkus-shield]][Quarkus-url]
+* [![AWS SQS][AWS-SQS-shield]][AWS-SQS-url]
+* [![Maven][Maven-shield]][Maven-url]
+* [![Hibernate][Hibernate-shield]][Hibernate-url]
+* [![Jakarta Validation][Jakarta-shield]][Jakarta-url]
+* [![Oracle JDBC][Oracle-shield]][Oracle-url]
+
+
+## 🏗 Arquitectura y patrones
+
+---
+El servicio sigue una arquitectura limpia basada en principios modernos:
+
+- **Arquitectura Hexagonal**  
+  Separación clara entre dominio, aplicación e infraestructura.
+
+- **Tell, Don't Ask**  
+  El dominio valida su propio estado.
+
+- **Abstract Factory (Infraestructura)**  
+  Selección desacoplada del canal de envío:
+
+    - Webservice
+    - Email
+    - SMS
+
+
+## 🧱 Estructura del Proyecto
+
+---
+``` bash
 src/main/java/org/microservices/notification_emission
 ├── application
 │   ├── qualifier
@@ -77,23 +132,50 @@ src/main/java/org/microservices/notification_emission
                     └── NotificationEmissionEntity.java
 ```
 
-## Como correr el proyecto
-Modo dev:
+## 🏇 Cómo correr el Proyecto
+
+---
+### 🔥 Modo desarrollo
+
 ```bash
 ./mvnw quarkus:dev
 ```
 
-Empaquetar:
+### 📦 Empaquetar
+
 ```bash
 ./mvnw package
 ```
 
-Ejecutar jar:
+### ▶ Ejecutar el JAR
+
 ```bash
 java -jar target/quarkus-app/quarkus-run.jar
 ```
 
-Tests:
+### ✅ Tests
+
 ```bash
 ./mvnw test
 ```
+
+---
+<!-- MARKDOWN LINKS & IMAGES -->
+<!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
+<!-- https://simpleicons.org/ -->
+[Java-shield]: https://img.shields.io/badge/Java-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white
+[Java-url]: https://www.java.com/
+[Quarkus-shield]: https://img.shields.io/badge/Quarkus-ffbb00?style=for-the-badge&logo=quarkus&logoColor=white
+[Quarkus-url]: https://quarkus.io/
+[AWS-SQS-shield]: https://img.shields.io/badge/AWS_SQS-FF9900?style=for-the-badge&logo=amazonsqs&logoColor=white
+[AWS-SQS-url]: https://aws.amazon.com/sqs/
+[Maven-shield]: https://img.shields.io/badge/Apache_Maven-C71A36?style=for-the-badge&logo=apachemaven&logoColor=white
+[Maven-url]: https://maven.apache.org/
+[Hibernate-shield]: https://img.shields.io/badge/Hibernate-59666C?style=for-the-badge&logo=hibernate&logoColor=white
+[Hibernate-url]: https://hibernate.org/
+[Jakarta-shield]: https://img.shields.io/badge/Jakarta_EE-004088?style=for-the-badge&logo=jakartaee&logoColor=white
+[Jakarta-url]: https://jakarta.ee/
+[Oracle-shield]: https://img.shields.io/badge/Oracle-F80000?style=for-the-badge&logo=oracle&logoColor=white
+[Oracle-url]: https://www.oracle.com/database/
+[commits-shield]: https://img.shields.io/github/commit-activity/t/solano2020/emission-notification?style=for-the-badge&logo=github
+[commits-url]: https://github.com/solano2020/emission-notification/graphs/commit-activity
