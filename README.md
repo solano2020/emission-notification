@@ -21,7 +21,7 @@
 - [📖 Sobre el proyecto](#-sobre-el-proyecto)
 - [🚀 Tecnologías](#-tecnologías)
 - [🏗 Arquitectura y patrones](#-arquitectura-y-patrones)
-- [☁️ Diagrama de red AWS](#diagrama-de-red-aws)
+- [☁️ Diagramas de arquitectura](#-diagramas-de-arquitectura)
 - [🧱 Estructura del proyecto](#-estructura-del-proyecto)
 - [🏇 Cómo correr el proyecto](#-cómo-correr-el-proyecto)
 
@@ -68,7 +68,7 @@ El servicio sigue una arquitectura limpia basada en principios modernos:
     - Email
     - SMS
 
-## Diagramas de arquitectura
+## ☁️ Diagramas de arquitectura
 
 ---
 ### Diagrama lógico (común)
