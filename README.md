@@ -68,9 +68,23 @@ El servicio sigue una arquitectura limpia basada en principios modernos:
     - Email
     - SMS
 
-## Diagrama de red AWS
+## Diagramas de arquitectura
 
 ---
+### Diagrama lógico (común)
+
+```mermaid
+flowchart LR
+  Producer[Producer<br/>Lambda u otro servicio] -->|SendMessage| SQS[(Amazon SQS Queue)]
+  SQS -->|Evento de emisión| EN[Emission-Notification]
+  EN -->|JDBC 1521| RDS[(Oracle DB)]
+  EN -->|Webservice Email SMS| CH[Canales de notificación]
+  EN -->|Logs y métricas| CW[CloudWatch]
+  EN -->|Error / reintentos agotados| DLQ[(Amazon SQS DLQ)]
+```
+
+### Despliegue 1: Emission-Notification como microservicio (ECS/EKS)
+
 ```mermaid
 flowchart LR
   %% AWS Network / Runtime View
@@ -84,7 +98,7 @@ flowchart LR
       direction TB
       IGW[Internet Gateway]
       NAT[NAT Gateway]
-      ALB[Application Load Balancer<br/>opcional si se expones REST]
+      ALB[Application Load Balancer<br/>opcional si se expone REST]
     end
 
     subgraph PRIV_APP[Private Subnets - App]
@@ -115,7 +129,69 @@ flowchart LR
 
   Client[Ops Client<br/>opcional] -->|HTTPS| ALB
 ```
+### Despliegue 2: Emission-Notification como servicio on-demand Lambda
+```mermaid
+flowchart LR
 
+  %% =========================
+  %% Producer
+  %% =========================
+  Producer["Producer<br/>Lambda u otro servicio"] -->|SendMessage| SQS["Amazon SQS Queue"]
+  Producer -->|Error routing| DLQ["Amazon SQS DLQ"]
+
+  %% =========================
+  %% AWS VPC
+  %% =========================
+  subgraph VPC["AWS VPC"]
+    direction LR
+
+    subgraph PUB["Public Subnets"]
+      direction TB
+      IGW["Internet Gateway"]
+      NAT["NAT Gateway"]
+      ALB["Application Load Balancer<br/>opcional si se expone REST"]
+    end
+
+    subgraph PRIV_APP["Private Subnets - App"]
+      direction TB
+      LQ["AWS Lambda (Quarkus)<br/>Emission Notification<br/>On-Demand"]
+      CW["CloudWatch Logs and Metrics"]
+    end
+
+    subgraph PRIV_DB["Private Subnets - DB"]
+      direction TB
+      RDS[("Amazon RDS Oracle<br/>o Oracle en EC2")]
+    end
+
+    VPCE["VPC Endpoint Interface for SQS"]
+
+    %% REST opcional
+    ALB -->|HTTP HTTPS dev| LQ
+
+    %% Base de datos
+    LQ -->|JDBC 1521| RDS
+
+    %% Acceso a SQS desde VPC
+    LQ -->|Receive Delete| VPCE
+    VPCE --> SQS
+
+    %% Si no se usa VPCE
+    LQ -.->|If no VPCE via NAT| NAT
+    NAT --> IGW
+
+    %% Observabilidad
+    LQ -->|Logs and metrics| CW
+  end
+
+  %% =========================
+  %% Flujo principal
+  %% =========================
+  SQS -->|Trigger Lambda| LQ
+  LQ -->|On failure retry| SQS
+  SQS -->|MaxReceiveCount| DLQ
+
+  Client["Ops Client opcional"] -->|HTTPS| ALB
+```
 
 ## 🧱 Estructura del Proyecto
 
