@@ -8,8 +8,8 @@
         max-size: 10
         min-size: 1
         url: jdbc:oracle:thin:@//localhost:1521/FREEPDB1
-      username: app
-      password: app
+      username: db_user
+      password: db_password
 
 "%lambda":
   quarkus:
