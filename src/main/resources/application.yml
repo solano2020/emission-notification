@@ -2,6 +2,16 @@
   quarkus:
     http:
       port: ${APP_PORT}
+    sqs:
+      endpoint-override: http://localhost:4566
+      queue-url: ${QUEUE_URL}
+      aws:
+        region: ${AWS_DEFAULT_REGION}
+        credentials:
+          type: static
+          static-provider:
+            access-key-id: ${AWS_ACCESS_KEY_ID}
+            secret-access-key: ${AWS_SECRET_ACCESS_KEY}
     datasource:
       db-kind: ${DB_SOURCE}
       jdbc:
