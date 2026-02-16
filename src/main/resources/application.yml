@@ -1,10 +1,16 @@
 "%dev":
+  app:
+    sqs:
+      queue-url: ${QUEUE_URL}
+      consumer:
+        poll-interval: ${SQS_POLL_INTERVAL:5s}
+        initial-delay: ${SQS_POLL_INITIAL_DELAY:2s}
+        max-messages: ${SQS_MAX_MESSAGES:10}
   quarkus:
     http:
       port: ${APP_PORT}
     sqs:
       endpoint-override: http://localhost:4566
-      queue-url: ${QUEUE_URL}
       aws:
         region: ${AWS_DEFAULT_REGION}
         credentials:
