@@ -20,7 +20,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @QuarkusTest
-class SendEmissionNotificationServiceTest {
+class SendEmissionNotificationRequestServiceTest {
 
     @InjectMock
     EmissionRepository emissionRepository;
@@ -43,7 +43,7 @@ class SendEmissionNotificationServiceTest {
     @Test
     void execute_when_sendingNotification_IsSuccess() {
         //Creamos los datos esperados
-        VehicleRegistration registration = VehicleRegistration.create("ABC123", true, "12345");
+        VehicleRegistration registration = VehicleRegistration.create("ABC123", "12345");
         Emission emission = Emission.create(1L, 10L, registration);
 
         //Simulamos la busqueda de la emision en la base

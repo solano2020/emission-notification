@@ -5,30 +5,16 @@ import org.microservices.notification_emission.domain.model.vo.Plaque;
 public class VehicleRegistration {
 
     private final Plaque plaque;
-    private final boolean isIssued;
     private final String police;
 
-    private VehicleRegistration(String plaque, boolean isIssued, String police) {
-        validateIssued(isIssued);
+    private VehicleRegistration(String plaque, String police) {
         validatePolice(police);
         this.plaque = new Plaque(plaque);
-        this.isIssued = isIssued;
         this.police = police;
     }
 
-    public static VehicleRegistration create(String plaque, boolean isIssued, String police) {
-        return new VehicleRegistration(plaque, isIssued, police);
-    }
-
-    /**
-     * Valida si la emision se efectuo para poder notificar
-     *
-     * @param isIssued true si emitio poliza, en caso contrario false
-     */
-    private void validateIssued(boolean isIssued) {
-        if (!isIssued) {
-            throw new IllegalArgumentException("Es necesario haber emitido la poliza");
-        }
+    public static VehicleRegistration create(String plaque, String police) {
+        return new VehicleRegistration(plaque, police);
     }
 
     /**
@@ -39,7 +25,7 @@ public class VehicleRegistration {
      */
     public void validatePolice(String police) {
         if (police == null || police.isBlank()) {
-            throw new IllegalArgumentException("Póliza obligatoria");
+            throw new IllegalArgumentException("El campo póliza obligatoria");
         }
 
         String policeNormalized = police.trim();
@@ -57,10 +43,6 @@ public class VehicleRegistration {
 
     public Plaque getPlaque() {
         return plaque;
-    }
-
-    public boolean validateIssued() {
-        return isIssued;
     }
 
     public String getPolice() {

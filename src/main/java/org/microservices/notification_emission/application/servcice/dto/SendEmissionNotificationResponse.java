@@ -1,4 +1,4 @@
 package org.microservices.notification_emission.application.servcice.dto;
 
-public class SendEmissionNotificationResponse {
+public record SendEmissionNotificationResponse(boolean isSentNotification) {
 }

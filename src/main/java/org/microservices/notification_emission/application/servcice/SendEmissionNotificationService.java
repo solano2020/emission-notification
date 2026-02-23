@@ -1,16 +1,20 @@
 package org.microservices.notification_emission.application.servcice;
 
 import jakarta.enterprise.context.ApplicationScoped;
+import lombok.extern.slf4j.Slf4j;
+import org.microservices.notification_emission.application.qualifier.ChannelAdapter;
 import org.microservices.notification_emission.application.servcice.dto.SendEmissionNotificationRequest;
 import org.microservices.notification_emission.application.servcice.dto.SendEmissionNotificationResponse;
-import org.microservices.notification_emission.application.qualifier.ChannelAdapter;
-import org.microservices.notification_emission.domain.model.Emission;
-import org.microservices.notification_emission.domain.model.VehicleRegistration;
+import org.microservices.notification_emission.domain.exception.EmissionNotFoundException;
 import org.microservices.notification_emission.domain.model.vo.ShippingChannel;
+import org.microservices.notification_emission.domain.model.vo.StatusNotification;
 import org.microservices.notification_emission.domain.ports.channel.ChannelNotificationSender;
 import org.microservices.notification_emission.domain.ports.repository.EmissionRepository;
 import org.microservices.notification_emission.domain.ports.repository.NotificationEmissionRepository;
 
+
+
+@Slf4j
 @ApplicationScoped
 public class SendEmissionNotificationService implements SendEmissionNotificationUseCase{
 
@@ -27,12 +31,15 @@ public class SendEmissionNotificationService implements SendEmissionNotification
 
     @Override
     public SendEmissionNotificationResponse execute(SendEmissionNotificationRequest request) {
-        var vehicleRegistration = VehicleRegistration.create("ABC123",true,"12345");
-        var emission = emissionRepository.find(request.getEmissionId().toString()).orElse(Emission.create(
-                1L,2L, vehicleRegistration
-        ));
+        //Varificamos que exista la emision de la poliza
+        var emission = emissionRepository.find(request.getEmissionId().toString()).orElseThrow(() -> new EmissionNotFoundException("Emission no encontrada id: "+request.getEmissionId()));
+        //Enviamos la notificacion de la emision de la poliza
         var emissionNotification = channelNotificationSender.send(emission, ShippingChannel.fromValue(request.getShippingChannel().name()));
+        //Mandamos a guardar el resultado de la nomtificacion
         notificationEmissionRepository.save(emissionNotification);
-        return null;
+
+        return new SendEmissionNotificationResponse(
+                StatusNotification.SUCCESSFUL.equals(emissionNotification.getStatus())
+        );
     }
 }

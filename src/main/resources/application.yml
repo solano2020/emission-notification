@@ -2,6 +2,11 @@
   quarkus:
     http:
       port: ${APP_PORT}
+    log:
+      console:
+       enable: true
+       format: "%d{yyyy-MM-dd HH:mm:ss} %-5p [%c{4.}] (%t) %s%e%n"
+       level: INFO
     sqs:
       endpoint-override: http://localhost:4566
       queue-url: ${QUEUE_URL}
@@ -12,14 +17,21 @@
           static-provider:
             access-key-id: ${AWS_ACCESS_KEY_ID}
             secret-access-key: ${AWS_SECRET_ACCESS_KEY}
+    mp:  #propiedades para el listener a la cola SQS
+      messaging:
+        incoming:
+          emission:
+            connector: quarkus-amazon-sqs
+            queue-url: ${QUEUE_URL}
+            wait-time-seconds: 20
     datasource:
       db-kind: ${DB_SOURCE}
       jdbc:
         max-size: ${DB_POOL_MAX}
         min-size: ${DB_POOL_MIN}
-        url: {DB_URL}
+        url: ${DB_URL}
       username: ${DB_USER}
-      password: ${DB_PASSWORD}
+      password: ${DB_USER_PASSWORD}
     mailer:
       mock: ${EMAIL_MOCK}
       from: ${EMAIL_FROM}
@@ -30,8 +42,9 @@
 "%lambda":
   quarkus:
     http:
-      port: ${LAMBDA_HTTP_PORT}
-
+      port: ${APP_PORT}
+    lambda:
+      handler: org.microservices.notification_emission.infrastructure.input.sqs.SqsHandler
 #    datasource:
 #       devservices:
 #         enabled: false //para que en prod no levante docker
