@@ -14,7 +14,11 @@ import org.microservices.notification_emission.domain.ports.channel.ChannelNotif
 @ApplicationScoped
 public class MailpitChannelNotificationSender implements ChannelNotificationSender {
 
-    @Inject Mailer mailer;
+    Mailer mailer;
+
+    public MailpitChannelNotificationSender(Mailer mailer) {
+        this.mailer = mailer;
+    }
 
     @Override
     public EmissionNotification send(Emission emission, ShippingChannel channel)

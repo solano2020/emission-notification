@@ -284,6 +284,26 @@ java -jar target/quarkus-app/quarkus-run.jar
 ./mvnw test
 ```
 
+### 📨 Probar flujo SQS (producer + consumer)
+
+Con el servicio arriba, podés publicar mensajes en la cola con:
+
+```bash
+curl -X POST http://localhost:8030/sqs/messages \
+  -H "Content-Type: application/json" \
+  -d '{
+    "emissionId": 10,
+    "shippingChannel": "EMAIL",
+    "vehicleRegistration": {
+      "plaque": "ABC123",
+      "isIssued": true,
+      "police": "12345"
+    }
+  }'
+```
+
+El consumidor ejecuta polling automaticamente y procesa los mensajes recibidos sin necesidad de invocar un endpoint de lectura.
+
 ---
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
