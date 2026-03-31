@@ -29,7 +29,7 @@
       jdbc:
         max-size: ${DB_POOL_MAX}
         min-size: ${DB_POOL_MIN}
-        url: ${DB_URL}
+        url: ${ORACLE_JDBC_URL}
       username: ${DB_USER}
       password: ${DB_USER_PASSWORD}
     mailer:

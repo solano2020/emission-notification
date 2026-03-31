@@ -7,19 +7,19 @@ import org.microservices.notification_emission.domain.model.vo.ShippingChannel;
 public class ChannelFactoryProvider {
 
     private final WsFactory wsFactory;
-    private final EmailFactory emailFactory;
+    private final MailpitFactory mailpitFactory;
     private final SmsFactory smsFactory;
 
-    public ChannelFactoryProvider(WsFactory wsFactory, EmailFactory emailFactory, SmsFactory smsFactory) {
+    public ChannelFactoryProvider(WsFactory wsFactory, MailpitFactory mailpitFactory, SmsFactory smsFactory) {
         this.wsFactory = wsFactory;
-        this.emailFactory = emailFactory;
+        this.mailpitFactory = mailpitFactory;
         this.smsFactory = smsFactory;
     }
 
     public ChannelNotificationSenderAbstractFactory getFactory(ShippingChannel channel){
         return switch (channel){
             case WEBSERVICE -> wsFactory;
-            case EMAIL -> emailFactory;
+            case EMAIL -> mailpitFactory;
             case SMS -> smsFactory;
         };
     }

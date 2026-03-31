@@ -22,7 +22,6 @@ public class ChannelNotificationAdapter implements ChannelNotificationSender {
     public EmissionNotification send(Emission emission, ShippingChannel channel) {
         var factory =  channelFactoryProvider.getFactory(channel);
         var sender = factory.createSender();
-        sender.send(emission, channel);
-        return null;
+        return sender.send(emission, channel);
     }
 }

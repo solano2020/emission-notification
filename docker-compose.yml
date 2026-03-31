@@ -8,6 +8,8 @@ services:
       ORACLE_PASSWORD: ${ORACLE_PASSWORD}
       APP_USER: ${DB_USER}
       APP_USER_PASSWORD: ${DB_USER_PASSWORD}
+    volumes:
+      - "./scripts/oracle:/container-entrypoint-initdb.d"
     healthcheck:
       test: ["CMD", "healthcheck.sh"]
       interval: 10s

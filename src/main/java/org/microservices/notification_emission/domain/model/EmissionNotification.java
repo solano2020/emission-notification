@@ -1,37 +1,38 @@
 package org.microservices.notification_emission.domain.model;
 
+import org.microservices.notification_emission.domain.model.vo.ShippingChannel;
 import org.microservices.notification_emission.domain.model.vo.StatusNotification;
 
 public class EmissionNotification {
 
-    private final Long id;
-    private final Emission emission;
+    private final Long insuranceId;
+    private final ShippingChannel channel;
     private final StatusNotification status;
     private final String message;
 
-    private EmissionNotification(Long id, Emission emission, StatusNotification status, String message) {
-        validateId(id);
-        validateEmission(emission);
+    private EmissionNotification(Long insuranceId, ShippingChannel channel, StatusNotification status, String message) {
+        validateInsuranceId(insuranceId);
+        validateShippingChannel(channel);
         validateStatus(status);
-        this.id = id;
-        this.emission = emission;
+        this.insuranceId = insuranceId;
+        this.channel = channel;
         this.status = status;
         this.message = message;
     }
 
-    public static EmissionNotification create(Long id, Emission emission, StatusNotification status, String message){
-        return new EmissionNotification(id, emission, status, message);
+    public static EmissionNotification create(Long insuranceId, ShippingChannel channel, StatusNotification status, String message) {
+        return new EmissionNotification(insuranceId, channel, status, message);
     }
 
-    private void validateEmission(Emission emission) {
-        if (emission == null) {
-            throw new IllegalArgumentException("La emision de la poliza en obligatoria para notificar");
+    private void validateShippingChannel(ShippingChannel channel) {
+        if (channel == null) {
+            throw new IllegalArgumentException("El canal de la notificacion emision es obligatorio");
         }
     }
 
-    private void validateId(Long id) {
-        if (id == null) {
-            throw new IllegalArgumentException("El id de la notificacion emision es obligatorio");
+    private void validateInsuranceId(Long insuranceId) {
+        if (insuranceId == null) {
+            throw new IllegalArgumentException("El id del seguro es obligatorio para la notificacion de emission");
         }
     }
 
@@ -41,12 +42,12 @@ public class EmissionNotification {
         }
     }
 
-    public Long getId() {
-        return id;
+    public Long getInsuranceId() {
+        return insuranceId;
     }
 
-    public Emission getEmission() {
-        return emission;
+    public ShippingChannel getChannel() {
+        return channel;
     }
 
     public StatusNotification getStatus() {

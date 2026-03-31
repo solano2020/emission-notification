@@ -44,15 +44,15 @@ class SendEmissionNotificationRequestServiceTest {
     void execute_when_sendingNotification_IsSuccess() {
         //Creamos los datos esperados
         VehicleRegistration registration = VehicleRegistration.create("ABC123", "12345");
-        Emission emission = Emission.create(1L, 10L, registration);
+        Emission emission = Emission.create(1L, registration);
 
         //Simulamos la busqueda de la emision en la base
-        when(emissionRepository.find("1")).thenReturn(Optional.of(emission));
+        when(emissionRepository.find(1L)).thenReturn(Optional.of(emission));
 
         //Ejecutamos el metodo objetivo
         service.execute(request);
 
-        verify(emissionRepository).find("1");
+        verify(emissionRepository).find(1L);
         verify(notificationEmissionRepository).save((EmissionNotification) null);
     }
 

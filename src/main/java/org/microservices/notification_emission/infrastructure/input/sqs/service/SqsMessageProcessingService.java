@@ -149,7 +149,7 @@ public class SqsMessageProcessingService {
      * @param request de tipo SendEmissionNotificationRequest
      */
     private void validateRequest(SendEmissionNotificationRequest request) {
-        if (request == null || request.getEmissionId() == null || request.getShippingChannel() == null) {
+        if (request == null || request.getInsuranceId() == null || request.getShippingChannel() == null) {
             throw new NonRetryableMessageException("Mensaje SQS sin datos requeridos");
         }
     }

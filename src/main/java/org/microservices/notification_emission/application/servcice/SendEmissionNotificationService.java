@@ -13,7 +13,6 @@ import org.microservices.notification_emission.domain.ports.repository.EmissionR
 import org.microservices.notification_emission.domain.ports.repository.NotificationEmissionRepository;
 
 
-
 @Slf4j
 @ApplicationScoped
 public class SendEmissionNotificationService implements SendEmissionNotificationUseCase{
@@ -31,13 +30,9 @@ public class SendEmissionNotificationService implements SendEmissionNotification
 
     @Override
     public SendEmissionNotificationResponse execute(SendEmissionNotificationRequest request) {
-        //Varificamos que exista la emision de la poliza
-        var emission = emissionRepository.find(request.getEmissionId().toString()).orElseThrow(() -> new EmissionNotFoundException("Emission no encontrada id: "+request.getEmissionId()));
-        //Enviamos la notificacion de la emision de la poliza
+        var emission = emissionRepository.find(request.getInsuranceId()).orElseThrow(() -> new EmissionNotFoundException("Emission no encontrada id: "+ request.getInsuranceId()));
         var emissionNotification = channelNotificationSender.send(emission, ShippingChannel.fromValue(request.getShippingChannel().name()));
-        //Mandamos a guardar el resultado de la nomtificacion
         notificationEmissionRepository.save(emissionNotification);
-
         return new SendEmissionNotificationResponse(
                 StatusNotification.SUCCESSFUL.equals(emissionNotification.getStatus())
         );

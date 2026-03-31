@@ -8,8 +8,8 @@ import org.microservices.notification_emission.application.servcice.dto.data.Shi
 @Getter
 public class SendEmissionNotificationRequest {
 
-    @NotNull(message = "El identificador de la emision es obligatorio")
-    Long emissionId;
+    @NotNull(message = "El identificador del seguro es obligatorio")
+    Long insuranceId;
 
     @NotNull(message = "El tipo de canal de envio es obligatorio. ejemplo: WEBSERVICE")
     ShippingChannel shippingChannel;
