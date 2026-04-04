@@ -9,17 +9,22 @@ import org.microservices.notification_emission.domain.model.Emission;
 import org.microservices.notification_emission.domain.model.EmissionNotification;
 import org.microservices.notification_emission.domain.model.vo.ShippingChannel;
 import org.microservices.notification_emission.domain.model.vo.StatusNotification;
-import org.microservices.notification_emission.domain.ports.channel.ChannelNotificationSender;
+import org.microservices.notification_emission.infrastructure.output.channel.strategy.NotificationStrategy;
 
 @Slf4j
 @ApplicationScoped
-public class MailpitChannelNotificationSender implements ChannelNotificationSender {
+public class MailpitStrategy implements NotificationStrategy {
 
     @Inject
     Mailer mailer;
 
     @Override
-    public EmissionNotification send(Emission emission, ShippingChannel channel) {
+    public ShippingChannel getType() {
+        return ShippingChannel.EMAIL;
+    }
+
+    @Override
+    public EmissionNotification send(Emission emission) {
         log.info("Enviando notificacion via Email...");
         mailer.send(
                 Mail.withText("quarkus@quarkus.io",
@@ -30,7 +35,7 @@ public class MailpitChannelNotificationSender implements ChannelNotificationSend
 
         return EmissionNotification.create(
                 emission.getInsurance(),
-                channel,
+                ShippingChannel.EMAIL,
                 StatusNotification.SUCCESSFUL,
                 "OK"
         );
