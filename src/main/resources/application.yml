@@ -8,7 +8,7 @@
        format: "%d{yyyy-MM-dd HH:mm:ss} %-5p [%c{4.}] (%t) %s%e%n"
        level: INFO
     sqs:
-      endpoint-override: http://localhost:4566
+      endpoint-override: ${SQS_ENDPOINT}
       queue-url: ${QUEUE_URL}
       aws:
         region: ${AWS_DEFAULT_REGION}
