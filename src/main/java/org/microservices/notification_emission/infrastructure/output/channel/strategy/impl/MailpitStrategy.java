@@ -1,4 +1,4 @@
-package org.microservices.notification_emission.infrastructure.output.channel.impl;
+package org.microservices.notification_emission.infrastructure.output.channel.strategy.impl;
 
 import io.quarkus.mailer.Mail;
 import io.quarkus.mailer.Mailer;

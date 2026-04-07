@@ -7,6 +7,7 @@ import org.microservices.notification_emission.application.servcice.dto.SendEmis
 import org.microservices.notification_emission.domain.exception.EmissionNotFoundException;
 import org.microservices.notification_emission.domain.model.vo.ShippingChannel;
 import org.microservices.notification_emission.domain.model.vo.StatusNotification;
+import org.microservices.notification_emission.domain.ports.channel.ChannelNotificationSender;
 import org.microservices.notification_emission.domain.ports.repository.EmissionRepository;
 import org.microservices.notification_emission.domain.ports.repository.NotificationEmissionRepository;
 import org.microservices.notification_emission.infrastructure.output.channel.strategy.NotificationService;
@@ -18,18 +19,19 @@ public class SendEmissionNotificationService implements SendEmissionNotification
 
     private final EmissionRepository emissionRepository;
     private final NotificationEmissionRepository notificationEmissionRepository;
-    private final NotificationService notificationService;
+    private final ChannelNotificationSender notificationSender;
 
-    public SendEmissionNotificationService(EmissionRepository emissionRepository, NotificationEmissionRepository notificationEmissionRepository, NotificationService notificationService) {
+    public SendEmissionNotificationService(EmissionRepository emissionRepository, NotificationEmissionRepository notificationEmissionRepository,
+                                           NotificationService notificationService) {
         this.emissionRepository = emissionRepository;
         this.notificationEmissionRepository = notificationEmissionRepository;
-        this.notificationService = notificationService;
+        this.notificationSender = notificationService;
     }
 
     @Override
     public SendEmissionNotificationResponse execute(SendEmissionNotificationRequest request) {
         var emission = emissionRepository.find(request.getInsuranceId()).orElseThrow(() -> new EmissionNotFoundException("Emission no encontrada id: "+ request.getInsuranceId()));
-        var emissionNotification = notificationService.send(ShippingChannel.fromValue(request.getShippingChannel().name()), emission);
+        var emissionNotification = notificationSender.send(emission, ShippingChannel.fromValue(request.getShippingChannel().name()));
         notificationEmissionRepository.save(emissionNotification);
         return new SendEmissionNotificationResponse(
                 StatusNotification.SUCCESSFUL.equals(emissionNotification.getStatus())

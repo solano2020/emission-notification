@@ -61,12 +61,13 @@ El servicio sigue una arquitectura limpia basada en principios modernos:
 - **Tell, Don't Ask**  
   El dominio valida su propio estado.
 
-- **Abstract Factory (Infraestructura)**  
-  Selección desacoplada del canal de envío:
+- **Estrategy (Infraestructura)**  
+  Selección desacoplada mediante el canal de envío:
 
     - Webservice
     - Email
     - SMS
+    - etc
 
 ## ☁️ Diagramas de arquitectura
 
@@ -239,16 +240,13 @@ src/main/java/org/microservices/notification_emission
     └── output
         ├── channel
         │   ├── ChannelNotificationAdapter.java
-        │   ├── factory
-        │   │   ├── ChannelFactoryProvider.java
-        │   │   ├── ChannelNotificationSenderAbstractFactory.java
-        │   │   ├── EmailFactory.java
-        │   │   ├── SmsFactory.java
-        │   │   └── WsFactory.java
-        │   └── impl
-        │       ├── EmailChannelNotificationSender.java
-        │       ├── SmsChannelNotificationSender.java
-        │       └── WsChannelNotificationSender.java
+        │   └── strategy
+        │       ├── NotificationService.java
+        │       ├── NotificationStrategy.java
+        │       └── impl
+        │           ├── MailplitStrategy.java
+        │           ├── SmsStrategy.java
+        │           └── WsStrategy.java
         └── database
             └── oracle
                 ├── EmissionOracleAdapter.java
@@ -260,6 +258,29 @@ src/main/java/org/microservices/notification_emission
 ## 🏇 Cómo correr el Proyecto
 
 ---
+### ✅ Requisitos recomendados
+
+- Tener **Docker** y **Docker Compose** instalados para ejecutar los servicios asociados (Oracle, LocalStack y Mailpit).
+- Configurar variables de entorno desde `.env` (puedes partir de `.env.example`).
+
+### 🐳 Levantar servicios asociados con Docker Compose
+
+```bash
+docker compose up -d
+```
+
+### 📜 Ver logs de los servicios
+
+```bash
+docker compose logs -f
+```
+
+### 🛑 Detener servicios asociados
+
+```bash
+docker compose down
+```
+
 ### 🔥 Modo desarrollo
 
 ```bash

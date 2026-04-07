@@ -1,4 +1,4 @@
-package org.microservices.notification_emission.infrastructure.output.channel.impl;
+package org.microservices.notification_emission.infrastructure.output.channel.strategy.impl;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import lombok.extern.slf4j.Slf4j;
